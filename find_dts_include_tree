@@ -1,0 +1,39 @@
+#!/bin/bash
+
+find_inc()
+{
+	if [ -f "$1" ]; then
+		q=$(grep '#include' $1  | awk -F\" '{print $2}' | xargs)
+		q1=$(grep '#include' $1  | awk -F\< '{print $2}' | tr -d '>' | xargs )
+		local n
+		let n=$2
+		q="$q $q1"
+		echo -n "\"$1\" -> { " 
+		for i in $q 
+		do
+			#printf '%0.s-' $(seq 1 $n)
+			# print('-' * $n)
+			echo -n "\"$i\""	
+			#find_inc $i $((n+1))
+		done
+		 echo "};"
+		for i in $q 
+		do
+			find_inc $i $((n+1))
+		done
+		#q1="$q1"
+		#[ ! -z "$q1" ] && printf '%0.s-' $(seq 1 $n) && echo $q1
+	fi	
+}
+
+digraph()
+{
+echo "digraph {"
+#echo "\"$1;\""
+find_inc $1 1
+echo "}"
+}
+
+digraph $1 > a.dot
+dot -Tpng a.dot > a.png
+eog a.png
