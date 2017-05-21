@@ -3,8 +3,8 @@
 find_inc()
 {
 	if [ -f "$1" ]; then
-		q=$(grep '#include' $1  | awk -F\" '{print $2}' | xargs)
-		q1=$(grep '#include' $1  | awk -F\< '{print $2}' | tr -d '>' | xargs )
+		q=$(grep '/include/' $1  | awk -F\" '{print $2}' | xargs)
+		q1=$(grep '/include/' $1  | awk -F\< '{print $2}' | tr -d '>' | xargs )
 		local n
 		let n=$2
 		q="$q $q1"
